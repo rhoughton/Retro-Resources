@@ -1,0 +1,85 @@
+Dr. Dobbs Journal, Feb 1988: 
+
+In the “C Chest” column, article titled “Hiding Configuration Information” …  
+
+By Allen Holub  
+
+Storing a programs configuration information that is variables that can be changed by users but that must retain their values between successive program and vocations is a common problem 
+
+an easy solution is to use a configuration file that's read in by the program when it boots 
+
+configuration files have problems though the first one is finding the file 
+
+many programs require the configuration file to be in the current directory 
+
+if you're going to execute the program in more than one directory you need a configuration file in each of these directories clearly this behavior isn't really acceptable not only do you start filling up your disk with unnecessary files but also the files can get out of sync with each other if you make a change to one you have to make a change to all of them there are other solutions however first you can search for the file along the path PATH 
+
+example one page 95 shows a search for file subroutine that can be used for this purpose 
+
+it's passed two strings the first containing a file name and the second the name of an environment that holds the search path a semi colon delimited list of directories the search() subroutine looks for the file first in the current directory and then in all the directories listed in the given environment string 
+
+if the file is found search returns a pointer to the full path name otherwise it returns null  
+
+THE access()  
+
+the access subroutine that search uses is a Unix function that looks at the permission mask associated with a file you can use it to test for read permission write permission and so forth here I'm just going to use it to test for existence if you don't have the access function you can do the same thing by trying to open the file for read and looking to see if open returned an error 
+
+Open() open()  
+
+if it did the file didn't exist 
+
+The strpbrk(char *src, char *pat)  
+
+So the function I typed out above here searches the source string for any of the characters in the path string and returns a pointer to that character if found the function extracts a series of tokens from the source string tokens are delimited by any of the characters in the delim string 
+
+the first time the subroutine is called it returns the first token from the string in subsequent calls the first argument is set to null and it returns subsequent tokens from the original string it returns null when there are no more tokens the git environment  
+
+getenv() 
+
+And there I typed it out correctly this function returns the contents of the indicated environment this string has to be copied to P buff 
+
+pbuf[] 
+
+Because it's modified by the subsequent strtok() calls because it's modified by the subsequent calls 
+
+these are all antsy functions so they should be in your compilers library  
+
+another alternative to searching along the path is provided by some compilers such as microsofts these compilers provide the full path name of the executable file in argv 
+
+argv[0] 
+
+you can then require the configuration file to be in the directory as the executable file a third and I think the best alternative is to dispense with the configuration file entirely and to incorporate the configuration information in the exe file itself this way you don't clutter up the disk with needless files whose immediate purpose is not obvious 
+
+to use the exe file you have to find it on the disk either using either of the methods discussed earlier you have to declare a structure in your program that will contain the modifiable options at very least this structure must contain a signature file and a checksum the signature contains an arbitrary but unchanging string that you can look at to see if the options are valid 
+
+a stripped down option structure called opts is shown in example two page 96 
+
+the Microsoft compiler correctly evaluates the size of function as the number of characters in the string including the\ 0 
+
+I can't vouch for other compilers though because the length is used in the declaration you can use a string length call to compute it because it's executed at runtime not compile time consequently if your compilers size of doesn't work correctly you'll have to count the characters in the signature string to declare the array 
+
+options are fetched from the exe file with a call to get_opts(argv[0]) 
+
+at the head of my main subroutine here argv holds the full path name of the exe file if this is the first time that the program is executed that getups function creates and initializes the options area in the file options are stored at the end of the exe file following an executable code the exe file is opened for binary mode read read on line 14 I then seek to what are to be the beginning of the options area on line 20 that is the options area at the end of the file so I seek to end of file less the size of the OPS structure the structure is loaded on line 22 now I look on the signature if it doesn't match I assume that this is the first time that the program has been run in which case the options won't exist yet so I initialize the opt structure myself on lines 27 to 38 OK so of all these videos this might be a really good one to go to the link down below here um I'm going to go ahead 
+
+So now I'll jump down to the the section titled nifty stuff: awk and many of you know this as awk 
+
+so he writes about this that in addition to being a flightless singing sea going bird and the sound made by that bird it is one of the more useful tools in the Unix toolbox many perhaps most programmers do nothing but net manipulate or verify data 
+
+Filter programs such as grep said R and so forth just output A shuffled around version of an input file 
+
+other programs such as database report generators shuffle around a database and output parts of it and then ask your representation 
+
+though none of these programs are particularly hard to write it's a nuisance to write a hoard of special purpose programs in a language such as C especially if you're going to use that program once and throw it away 
+
+awk provides a solution to this problem it is essentially A dialect of sea that's optimized for text processing a general purpose tool from which other tools can be built it supports all the sea operators and control flow statements even recursion though the operators have been extended to work with strings awk programs all take the form expression and action 
+
+Expression { action } 
+
+so right there is what it looks like in the magazine article he says where the expression tells awk when to apply the action that is the action can be applied on every line on a range of lines a group of lines delimited by a specific string on every line that contains a match for a regular expression on every line that has a specific string or number in a specific field and so forth the action can be a simple print F statement or a complex program that does elaborate database manipulation most of the familiar C constructs are available  
+
+So he goes on to give some examples in the article I'm going to jump down to the part where he says to my surprise and delight awk is now available to us masses a WK programming language by Alfred aho Brian kernighan and Peter weinberger is an excellent introduction to the language itself and an executable version called MKS awk is available for the ibmc and clones from mortis Kern systems for $75 and that's a Canadian address they supply 
+
+Alfred Aho, Brian Kernighan and Peter Weinberger And I wanted to make sure I got the spelling of those names right so I typed them again up here  
+
+ 
