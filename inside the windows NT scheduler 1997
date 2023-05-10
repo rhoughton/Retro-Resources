@@ -1,0 +1,77 @@
+Windows NT magazine Sept 1997 
+
+And the title of this article is inside the windows NT scheduler assigning CPU time and a uniprocessor environment oh and this is a part one apparently begins writing windows NT is a preemptive multithreading operating system that is NT lets several programs run simultaneously and switches among them often enough to create the illusion that each program is the only program running on the machine 
+
+What does he mean by “preemptive multithreading OS?”  
+
+Well that's the idea anyway how to smoothly share one CPU or multiple CPUs among many threads of control is a complicated problem solving this problem dynamically many times per second is the job of the anti scheduler 
+
+What does the NT scheduler do?  
+
+Scheduler must honor the relative priorities that the applications programmers designate for each thread and attempt to provide responsiveness to user interactive threads 
+
+in this first part of a two-part series about the algorithms NT's scheduler employees I'll introduce basic information about the NT scheduler you'll find out about the priority levels that NTSS signs to threads how win 32 programs specify priorities for their threads the situations that invoke the scheduler and the algorithms NT uses  
+
+If you see gaps in the reading I’m skipping redundant sentences 
+
+so this first section is titled threads and priorities the basic scheduling unit in NT is a thread a thread is a point of control within a process processes consist of a virtual address space that includes executable instructions a set of resources such as file handles and one or more threads that execute within its address space 
+
+What are processes? Threads? 
+
+Typically applications consist of only one process so program and process are often used synonymously 
+
+most programs are today single threaded which means they run as one process with one thread however multithreaded programs are becoming more commonplace an example of a multithreaded program is a program that lets a user sort a list with an option to cancel one thread in the programs process might perform the CPU intensive sorting task while another thread in the process displays a how to cancel message to the user and waits for a response the scheduler does not differentiate between threads of different processes instead the scheduler examines the priorities of all the threads ready to run at a given instant to pick which thread to execute 
+
+indeed assigns each thread a priority number from 1 to 31 where higher numbers signal higher priorities and tea reserves priorities 16 through 31 AKA real time priorities for use by time critical operations only a user with administrator privileges can direct the system to execute threads in this range 
+
+Who can execute threads assigned 16-31 priority levels? 
+
+NTT uses priorities one through 15 AKA dynamic priorities for the program threads of typical applications such as notepad where Lotus notes and that last example kind of dates this article remember we're in 1997 he goes on to say that the anti Colonel provides functions that let you set a thread to any of the 31 priority levels but the win 32 API is more indirect and win 32 specifying A threads priority is a two step process you must first set the priority class of the process then you can alley a relative priority to individual threads they process priority class is a priority level around which NT lets the process threads execute 
+
+the win 32 API defines 4 priority classes real time high normal and idle 
+
+What 4 classes are defined BY THE WIN32 API? 
+
+These names correspond to priority levels 24 13 8 and 4 what a weird way for dictate to list out those numbers that way 
+
+well he goes on the right setting a process priority class causes all the threads of that process to begin executing at priorities within plus or minus two of the class priority this scheme is shown in figure 1 new processes inherit the priority class of their parent process threads start at the priority level associated with their process priority class 
+
+The relative priorities that can change a threads priority from its process class priority our highest above normal normal below normal and lowest 
+
+the win 32 API includes 2 special case priority modifiers time critical and idle 
+
+time critical moves a dynamic threads priority to the top of the dynamic range which is 15 and idle moves it to the bottom which is 1 
+
+this next section is titled whose turn is it 
+
+threads must take turns running on the CPU so that one thread doesn't prevent other threads from performing work one of the schedulers jobs is to assign units of CPU time called quantums to threads 
+
+all right and they spelled quantums correctly up here 
+
+a quantum is typically very short in duration but threads receive quantums so frequently that the system appears to run that the system appears to run smoothly even when many threads are performing work one difference between NT server and NT workstation is the length of a user's threads quantum on most X86 systems running NT server a quantum is 120 milliseconds (ms) 
+
+on X86 systems running NT workstation a quantum can be 20 milliseconds 
+
+or 40 or 60 depending on your system setting and whether the thread is a background or foreground application thread he promises to write more on this topic later 
+
+so the scheduler must make a CPU scheduling decision every time one of these three situations occur either #1  A threads quantum on the CPU expires #2  A thread waits for an event to occur or #3A thread becomes ready to execute 
+
+when a thread's quantum expires the scheduler executes the fine ready thread algorithm to decide whether another thread needs to take over the CPU if a higher priority thread is ready to execute it replaces or preempts the thread that was running in many cases threads perform processing and then wait for an event to occur for example a client server application might have a server thread that performs processing when it receives client requests and then waits for more requests a waiting or blocked thread gives up its quantum early and the scheduler must execute the find ready thread algorithm to find a new thread to run 
+
+What is a waiting (or blocked) thread doing? 
+
+When a new threader a blocked thread becomes ready to execute for example when the client server application server thread receives another request the scheduler executes the ready thread algorithm this algorithm determines whether the ready thread will take over the CPU immediately or be placed in an eligible to execute list 
+
+What is the readyThread algorithm doing? 
+
+Find ready thread and ready thread are the key algorithms the Ant scheduler uses to determine how threads take turns on the CPU the uniprocessor versions of find ready thread and ready thread are straightforward algorithms 
+
+OK so I'm going to skip the next few sections where he really goes into detail about these two algorithms I'm also skipping the section where he talks about boosting and decay well maybe I'll say one thing about the boosting section so he writes another type of boost NT workstation applies as a foreground application boost which you can control from the performance tab of the system applet in control panel and you can see a screen one for that 
+
+OK so that's pretty cool that you can control this he said this type of boost affects a quantum length rather than priority for the default maximum seti and he extends the quantums of foreground application threads to 60 milliseconds if you position the slider in the middle and he sets the quantums to 40 if you position the slider on none the quantums are 20 milliseconds the same as the quantums of background application threads 
+
+The last real section of this article is titled starvation prevention left alone the fine ready thread and ready thread might prevent low priority threads from getting a chance to execute so for example a priority four thread running on a system with continuously running priority eight threads would be starved for CPU time however NT provides A mechanism that gives low priority threads a shot at the CPU the NT balance set manager is a system thread that wakes up every second or so to perform memory tuning has the secondary responsibility balance set manager executes the scan ready queues algorithm which implements NTFS anti CPU starvation policy 
+
+What is the anti-cpu starvation policy ensuring? 
+
+so this scan ready queues scans the dispatcher ready list working down the list from priority 30 one it looks for threads that have been executed in more than three seconds when it finds one scan ready queues give the thread a special anti starvation boost double s its quantum and calls ready thread with the thread as a parameter the anti starvation boost differs from other booths instead of applying A relative priority increment the anti starvation boost slams the threads priority to the top of the dynamic range on pre service pack two SP2 systems the anti starvation boost was to priority 14 post SP2 systems boost to priority 15 oh so we see a little tweak there when you update windows when a thread that receives an anti starvation boost finishes its extended quantum or the thread blocks its priority returns to pre starvation boost level and its quantum returns to its usual length so the last paragraph is just him promising to tell us more next month there's a little about the author at the very bottom Marcus and avich holds a PhD in computer engineering from Carnegie Mellon he's an nternal consultant with open systems resources in New Hampshire and I wonder if this website still works NTinternals.com OK that's it for this video thanks for 
