@@ -1,0 +1,51 @@
+Byte 1987 
+
+Book Review by John V Olson 
+
+digital signal processing presents a broad selection of topics relating to digital signal analysis and what has become the traditional approach in engineering the material is sufficient for A2 semester college course at the junior senior level 
+
+the authors begin with the definition of discrete time signals and the systems that produce them 
+
+What are the first 2 topics this book covers? 
+
+Unlike other techs that attempt to justify the use of discrete mathematics by showing the connection to sampled analog signals... I'm not quite sure what he means by “showing the connection to sampled analog signals???” 
+
+Maybe he's saying discrete mathematics is connected to analog signals so therefore the student should be really interested in discrete mathematics 
+
+well whatever he means by that by that sentence he goes on to say that this book starts with a discussion of a discrete sequence of numbers as a signal without encumbering the reader with the possible sources of such a signal sequence 
+
+The first four chapters review the fundamental concepts of linear systems time invariance systems fourier transforms and transforms the authors present extensions and applications clearly in the classic transform theorems are tabulated for easy reference 
+
+the authors discuss in detail the distinction between fourier transforms at our continuous in time and frequency and those that are discreet 
+
+next the authors discuss the sampling theorem a core concept of digital signal processing 
+
+they developed the sampling theorem through discussion and example into the complete theorem is stated this approach works well if students are careful to work their way through the material a subsequent chapter shows the development of several of the most common algorithms for calculating the fast fourier transforms the rest of the book applies transform techniques to engineering principles the bulk of the materials connected in one way or another to the task of filtering signals to remove noise 
+
+oh removing noise 
+
+simple low and high pass filters are treated as examples in several of the introductory sections these intuitive ideas are developed more fully in a single chapter that covers the design philosophy of both finite impulse response and infinite impulse response filters 
+
+the discussion here is brief but complete a great deal of work outside the classroom is required for the student to master this material oh boy so that must have been a mantra going back to 1987 that academics like to tell students 
+
+with the next thing the authors do is turn to the development of a least squares approach to filter design an important and powerful technique not usually discussed in books at this level 
+
+students who master this material will be prepared for a more extensive course on adaptive algorithms and Kalman filters. 
+
+final chapter on spectral estimation focuses on the characteristics of autoregressive sequences and the estimation of their Spectra finally three chapters are devoted to a discussion of the implementation of digital filters in hardware 
+
+included here are discussions of finite length register effects such as the quantization noise associated with a/ D conversion and round off noise 
+
+the last chapter covers the design of general digital processing structures and discusses the problems in interpolation decimation and multirate filters 
+
+throughout the book the authors develop ideas with a design motivation they work through numerous examples that develop the students intuition and finish with a complete statement of the concept at hand this is very effective approach especially in an engineering context where the emphasis is more on the design and implementation and less on the rigorous sequential development of theorem and proof the material in each chapter is supported with numerous problems as students can use to evaluate and extend their understanding of the material 
+
+the mathematical context is modern and lucid the notation and concepts of linear algebra are especially effective in the formulation of signal analysis and the authors present presentation is clear concise and consistent the material is arranged in a modern format unencumbered by the mathematical orientation popular in books written 10 years ago 
+
+digital signal processing breaks new ground in its coverage of recent developments in the application of least squares techniques to filter the system design and in its discussion of spectral estimation while I found the signal flow graphs used to describe the process under discussion and liability due to their cumbersome complexity they are presented as a supplement to aid analysis and understanding and do not block the comprehension of the material 
+
+whether used as a primary text or as supplementary reading the book should find its place on the shelves of students and instructors alike and this reviewer John V Olsen is an associate professor of physics at the university of Alaska 
+
+ 
+
+ 
