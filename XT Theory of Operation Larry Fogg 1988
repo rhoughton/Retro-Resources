@@ -1,0 +1,67 @@
+Micro Cornucopia  
+
+I'll be reading out of issue #42 which is published in July 1988 the title of the article is XT's theory of operation putting all those smart chips together 
+
+and the little blurb at the beginning of the article that this editor often likes to add he says that larry's been researching and writing the pieces on the XTS LSI chips so that's the processor timer DMA controller etc so it was natural that he take the lead in this final piece this is the theory of operation the how all those fancy ics work together as a computer we're also finishing up one of our famous wall sized schematics for the XT if you have a hankering to really see what we're talking about then check the end of the article for details So yes this article was written by Larry Fogg mostly and then David Thompson OK folks here it is pretty nearly the whole circuit in one place we're using device names S04 
+
+For 74S04 
+
+In place of U numbers and we're using signal names for example reset in place of pin numbers we're doing this mostly because most of you have clones and though EU numbers and pin numbers may differ the device names and the signals remain note a signal named reset would be active would reset the system when the line is high so that's four volts or above a signal named reset sometimes called reset not or reset bar would be active when the line is low that is 1 volts or lower schematic drafters usually put a line above names of signals that are active flow 
+
+OK the first section is titled clock the PCs heartbeat comes from an 8284 clock generator all of the 8000 series chips here are spawn of Intel actually the Ed 284 spits out three clock signals OC a 14.31818 megahertz symmetric square wave goes to the IO bus for use by peripheral cards this signal is also used by the 8284 to create the other two clock signals 
+
+the frequency of the OSC output depends on the crystal connected to the 8284 a variable capacitor labeled color adjust by IBM lets you fine tune the crystals frequency the name color adjust comes from the fact that ibms cga card requires a very precise 14.31818 megahertz and a 3.579 megahertz so this last number is what you get when you divide the first number by 4 
+
+the 8284 can also accept an external clock input and switch between that and OSC but its clock source select input is held low through an LO4 inverter connected to +5 volts 
+
+this assures that OSC will always be selected a good thing since the external clock input connects to thin air but why not just hide the select line to ground Dave guesses the unnecessary inverter is a vestige from the X's development days when IBM may have toyed with A2 speed system Larry thinks it's sheer perversity Clark 88 provides the 4.77 megahertz 33% duty cycle signal which serves as the main system clock the third output A peripheral clock called PCLk gives the 8253 timer chip and the keyboard section asymmetric reference signal 
+
+in true blue XTS the 8280 fours res Rs input connects to a PWRGOOD signal 
+
+so you see how that says power good right so connect to that signal from the power supply a loss of power causes a reset none of the clones we've looked at implement this feature but you can create your own reset switch by shorting the reset input to ground this initiates a high on the 8284's reset output which connects directly to the processor and any coprocessor the falling edge of this reset triggers the reset sequence during direct memory access DMA transfers some rather convoluted logic circuitry sets U the first of two possible ready inputs to the 8284 with this input held low by the dma weight signal the 8280 fours ready output goes low when the 8088 sees this low it inserts weight states until the DMA controller finishes its transfer 
+
+ready can also be forced low by slow devices on the IO bus 
+
+all right the next section is very small and it's titled processor 
+
+so much for the heart on to the brains we'll talk about most of the 8088's function when we deal with the peripheral chips but one thing should be mentioned here the 8088 can be configured into modes in the XT the mode select input MN MX which stands for min and Max connects to the ground 
+
+Selects the maximum mode where the 8088 receives help generating bus control signals and can deal with coprocessors 
+
+next section is titled the buses and the bus controller 
+
+the 8088 can handle 8 bits of data and 20 bits of address 
+
+it needs only 20 pins for both data and address because it uses 8 pins for double duty these are labeled ad zero through 87 so the eight bits of data share the eight list significant address lines separating the data from the address takes place as follows During the first part of the bus cycle the 8088 places a complete address on its add zero through 87 and A8 through a 19 pins OK so we got a signal on those pins it also sends information to the 8288 bus controller via status lines zero through 2 the 8288 decodes this status information and generates an address latch enable by the pint of course he says so also address latch enable latches most of the address into two LS373 so that's plural and LS244 buffers the remaining four bits which is A8 through a 11 address enable board enables outputs for all three chips once the address has been latched we deal with data new status outputs from the 8088 till the 8288 to generate a data transmit receive signal so that's abbreviated as DTR these signals control the direction of data flowing through an LS245 octopus transceiver connected to pins ad zero through 87 so we have data and we know whether the processor will be receiving or sending 
+
+HOW DO WE KNOW THE PROCESSOR IS RECIEVING OR SENDING?  
+
+Another tweak of the status lines makes the 8288 pump out one of four sources and destinations: 
+
+ IO read  
+
+IO write  
+
+memory read or  
+
+memory write finally through its status lines the 8288 the 8088 send that data enable abbreviated DEN 
+
+so no that's not Denver it's data enable so through these status lines and the 8288 the 8088 sends a data enabled to the LS245 and we've placed address and data on the address and data buses 
+
+that takes care of one set of address and data signals the ones belonging to the internal buses these buses talk to the processors ram addressing logic ram data and most of the IO bus so it looks like that's J1 through J7J8 the right most expansion slot is the black sheep of the family more on J8 later 
+
+external address and data 
+
+the D multiplexing circuitry described earlier doesn't have enough oomph to talk to everything on the address data or control buses every input on an address line for instance adds a little capacitance and a little current drain to the line so in order to give these little de mixers a break the buses are divided into two parts internal and external 
+
+the de multiplexers Dr. the internal address and data buses buffers then transfer the internal signals to the external buses 
+
+the external address bus for instance services the system ram system ROM IO ports and the expansion slot J8 
+
+3LS240 fours buffer the addresses into or onto I should say the external bus 
+
+two of the LS240 fours carrying A8 through 19 have their two active low output control pins tied to ground 
+
+so part of the external address bus X8 through XA 19 always reflects exactly the contents of the internal bus the L 244 responsible for a zero through A7 has its output control pins tied to a onboard so you can see that is a on board address enable board I assume that's fine but why treat a zero through A7 differently than a 12 through a 19 both groups of addresses originate in L3 or L37 threes controlled by identical inputs if anyone out there was involved in the design of the XD or know someone who knows someone who is involved in the design would sure like to talk to you some of the workings of this machine aren't immediately obvious the external data bus is a bit stickier addresses go only one way from the processor or DMA to memory or IO data has to travel in both directions and L245 octopus transceiver handles the bidirectional buffering DLS 240 fives direction control input dir connects to an L27 positive nor gate which has three inputs when any of the three inputs go high the output of the nor gate goes low that forces the LS245 to pass data from the external data bus to the internal databus So at this point I'm going to end the video maybe I'll pick this article back U it is interesting but extremely technical on the next page is a huge diagram of the XT processor circuit so very interesting right you get to see all the pins at Larry fog is tight talking about and then on the page after that is the XT ram circuit and yeah for this one I think I'll only come back to reading it if there's demand so let me know in the comments if you wanted me to keep going else I'll just send my reading of the XT internal internals I'll just leave it at this thanks for watching 
+
+ 
